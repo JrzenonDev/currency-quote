@@ -1,12 +1,15 @@
 <template>
   <div class="container grid-lg my-2 py-2">
 
-    <div class="card">
+    <div
+      class="card mb-2"
+      v-if="listenQuotes.lenght > 0"
+    >
       <div class="card-header">
         <div class="h4">Acompanhando</div>
       </div>
       <div class="card-body">
-        <WatchListQuotes />
+        <WatchListQuotes :listen-quotes="listenQuotes" />
       </div>
     </div>
 
@@ -15,7 +18,7 @@
         <div class="h4">Todas as moedas</div>
       </div>
       <div class="card-body">
-        <ListQuotes :quotes="quotes" />
+        <ListQuotes :quotes="quotes" :listen-quotes="listenQuotes" />
       </div>
     </div>
   </div>
@@ -33,7 +36,8 @@ export default {
   setup() {
 
     const data = reactive({
-      quotes: {}
+      quotes: {},
+      listenQuotes: []
     })
 
     onMounted(async () => {

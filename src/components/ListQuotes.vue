@@ -46,6 +46,10 @@ export default {
     quotes: {
       type: Object,
       required: true
+    },
+    ListenQuotes: {
+      type: Array,
+      required: true
     }
   }
 }

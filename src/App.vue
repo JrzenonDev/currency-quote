@@ -3,7 +3,7 @@
 
     <div
       class="card mb-2"
-      v-if="listenQuotes.lenght > 0"
+      v-if="listenQuotes.length > 0"
     >
       <div class="card-header">
         <div class="h4">Acompanhando</div>
@@ -18,7 +18,12 @@
         <div class="h4">Todas as moedas</div>
       </div>
       <div class="card-body">
-        <ListQuotes :quotes="quotes" :listen-quotes="listenQuotes" />
+        <ListQuotes
+        :quotes="quotes"
+        :listen-quotes="listenQuotes"
+        @listen="onListen"
+        @unListen="onUnListen"
+      />
       </div>
     </div>
   </div>
@@ -45,7 +50,19 @@ export default {
       data.quotes = response.data
     })
 
-    return { ...toRefs(data) }
+    function onListen (code) {
+      data.listenQuotes.push(code)
+    }
+
+    function onUnListen(code) {
+      data.listenQuotes = data.listenQuotes.filter(key => key !== code)
+    }
+
+    return {
+      ...toRefs(data),
+      onListen,
+      onUnListen
+    }
 
   }
 }

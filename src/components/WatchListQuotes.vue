@@ -15,7 +15,9 @@
 import { reactive, ref, toRefs } from '@vue/reactivity'
 import ListQuotes from './ListQuotes'
 import api from '@/services/api'
-import { onMounted, watch } from '@vue/runtime-core'
+import { onMounted, onUnmounted, watch } from '@vue/runtime-core'
+
+const CURRENT_UPDATE_TIME = 30
 
 export default {
   name: 'WatchListQuotes',
@@ -26,14 +28,27 @@ export default {
       required: true
     }
   },
+  emits: ['unListen'],
   setup(props, {emit}) {
-    // const interval = ref(null)
+    const interval = ref(null)
     const quotes = ref({})
-    const nextUpdateTime = ref(30)
+    const nextUpdateTime = ref(CURRENT_UPDATE_TIME)
 
     const methods = reactive({
       onUnListen(code) {
         emit('unListen', code)
+      },
+
+      restartInterval() {
+        clearInterval(interval.value)
+        nextUpdateTime.value = CURRENT_UPDATE_TIME
+        interval.value = setInterval(() => {
+          nextUpdateTime.value -= 1
+          if (nextUpdateTime.value === 0) {
+            nextUpdateTime.value = CURRENT_UPDATE_TIME
+            this.refresh()
+          }
+        }, 1000)
       },
 
       async refresh() {
@@ -42,12 +57,18 @@ export default {
       }
     })
 
+    onUnmounted(() => {
+      clearInterval(interval.value)
+    })
+
     onMounted(() => {
       methods.refresh()
+      methods.restartInterval()
     })
 
     watch(props, () => {
       methods.refresh()
+      methods.restartInterval()
     })
 
     return {

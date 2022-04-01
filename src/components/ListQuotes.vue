@@ -27,11 +27,20 @@
         </td>
         <td>
           <a
-            href="#"
+            v-if="!listenQuotes.includes(key)"
             class="btn btn-primary btn-sm tooltip tooltip-left"
             data-tooltip="Seguir"
+            @click="$emit('listen', key)"
           >
             <i class="icon icon-plus"></i>
+          </a>
+          <a
+            v-else
+            class="btn btn-error btn-sm tooltip tooltip-left"
+            data-tooltip="Remover"
+            @click="$emit('unListen', key)"
+          >
+            <i class="icon icon-minus"></i>
           </a>
         </td>
       </tr>
@@ -47,10 +56,11 @@ export default {
       type: Object,
       required: true
     },
-    ListenQuotes: {
+    listenQuotes: {
       type: Array,
       required: true
     }
-  }
+  },
+  emits: ['listen', 'unListen']
 }
 </script>

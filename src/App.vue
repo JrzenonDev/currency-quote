@@ -9,7 +9,10 @@
         <div class="h4">Acompanhando</div>
       </div>
       <div class="card-body">
-        <WatchListQuotes :listen-quotes="listenQuotes" />
+        <WatchListQuotes
+          :listen-quotes="listenQuotes"
+          @unListen="onUnListen"
+        />
       </div>
     </div>
 
